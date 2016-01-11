@@ -4,11 +4,16 @@ MakePublicationDocument <-
              cnameFormat = c('<h3>', '</h3>'), pubSep = '<hr>',
              titleFormat = c('<h2>', '</h2>'), citeFormat  = c('', ''),
              yearFormat  = c('', ''), textFormat  = c('', ''), footer = '',
-             outputFile  = "outfile.txt") {
+             outputFile  = "outfile.txt", pubid = NULL) {
 
     library('scholar')
 
     pubs  = get_publications(usr)
+    if (!is.null(pubid)) {
+        pubid = apply(sapply(pubid, '==', pubs$pubid), 1, any)
+        if (!any(pubid)) error('no publications found')
+        pubs = pubs[pubid,]
+    }
 
     npubs = nrow(pubs)
 
@@ -107,3 +112,13 @@ outputFile = 'yay.md'
 MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), header, cnameExtra, cnameFormat,
                         pubSep, titleFormat, citeFormat, yearFormat, textFormat,
                         footer, outputFile)
+outputFile = 'yay1.md'
+
+MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), header, cnameExtra, cnameFormat,
+                        pubSep, titleFormat, citeFormat, yearFormat, textFormat,
+                        footer, outputFile, 'qjMakFHDy7sC')
+outputFile = 'yay2.md'
+
+MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), header, cnameExtra, cnameFormat,
+                        pubSep, titleFormat, citeFormat, yearFormat, textFormat,
+                        footer, outputFile, c('qjMakFHDy7sC', 'UeHWp8X0CEIC'))
