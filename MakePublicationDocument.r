@@ -1,5 +1,5 @@
 MakePublicationDocument <-
-    function(usr = c('Douglas Kelley' = 'AJKyfI4AAAAJ'),
+    function(usr = c('Douglas Kelley' = 'AJKyfI4AAAAJ'), addUserInfo = TRUE,
              header = '', cnameExtra = '',
              cnameFormat = c('<h3>', '</h3>'), pubSep = '<hr>',
              titleFormat = c('<h2>', '</h2>'), citeFormat  = c('', ''),
@@ -8,10 +8,21 @@ MakePublicationDocument <-
 
     library('scholar')
 
+    if (addUserInfo) {
+        profile = get_profile('AJKyfI4AAAAJ')
+        profile = c('\n',
+                    '|Total Citations:|', profile$total_cites,'|\n',
+                    '|---|---|\n',
+                    '|H index:|', profile$h_index, '|\n',
+                    '|i10 index:|', profile$i10_index, '|\n\n')
+        profile = paste(profile, collapse = ' ')
+
+    }  else profile = ''
+
     pubs  = get_publications(usr)
     if (!is.null(pubid)) {
         pubid = apply(sapply(pubid, '==', pubs$pubid), 1, any)
-        if (!any(pubid)) error('no publications found')
+        if (!any(pubid)) warning('no publications found')
         pubs = pubs[pubid,]
     }
 
@@ -77,7 +88,7 @@ MakePublicationDocument <-
 
     cite = paste(cite, collapse = ' ')
     sch  = paste(sch, collapse = ' ')
-    out = paste(c(header, out, cite, sch, footer), collapse ='\n')
+    out = paste(c(header, profile, out, cite, sch, footer), collapse ='\n')
 
     cat(out, file=outputFile,sep="\n")
 
@@ -109,16 +120,19 @@ footer = ''
 
 outputFile = 'yay.md'
 
-MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), header, cnameExtra, cnameFormat,
+MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), TRUE,
+                        header, cnameExtra, cnameFormat,
                         pubSep, titleFormat, citeFormat, yearFormat, textFormat,
                         footer, outputFile)
 outputFile = 'yay1.md'
 
-MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), header, cnameExtra, cnameFormat,
+MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), TRUE,
+                        header, cnameExtra, cnameFormat,
                         pubSep, titleFormat, citeFormat, yearFormat, textFormat,
                         footer, outputFile, 'qjMakFHDy7sC')
 outputFile = 'yay2.md'
 
-MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), header, cnameExtra, cnameFormat,
+MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), TRUE,
+                        header, cnameExtra, cnameFormat,
                         pubSep, titleFormat, citeFormat, yearFormat, textFormat,
                         footer, outputFile, c('qjMakFHDy7sC', 'UeHWp8X0CEIC'))
