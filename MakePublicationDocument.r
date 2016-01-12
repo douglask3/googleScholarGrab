@@ -75,8 +75,8 @@ MakePublicationDocument <-
     cite = c('Generated using scholar packages:\n',
                cite$author$family, ',', cite$author$given, '(', cite$year, '),',
                cite$title, ',', cite$note, ',', cite$url,'\n and \n',
-               'googleScholarGrab version', gitVersionNumber(), 'from',
-               gitRemoteURL())
+               '<a href="',gitRemoteURL(),'">','googleScholarGrab', '</a>',
+               'version no.', gitVersionNumber())
 
     if (!is.null(names(usr))) {
         name = c('<a href="https://scholar.google.co.uk/citations?user=',
