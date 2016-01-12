@@ -1,23 +1,44 @@
+MakeUserProfile <- function(usr, format = '1line') {
+    profile = get_profile(usr)
+
+    if (format == 'table') {
+        profile = c('\n',
+                    '|**Total Citations:**|', profile$total_cites,'|\n',
+                    '|---|---|\n',
+                    '|**H index:**|', profile$h_index, '|\n',
+                    '|**i10 index:**|', profile$i10_index, '|\n\n')
+    } else if(format == 'lines') {
+        profile = c('**Total Citations:**', profile$total_cites,'<br>',
+                    '**H index:**', profile$h_index, '<br>',
+                    '**i10 index:**', profile$i10_index)
+    }  else {
+        profile = c('**Total Citations:**', profile$total_cites,';',
+                    '**H index:**', profile$h_index, ';',
+                    '**i10 index:**', profile$i10_index)
+    }
+    profile = paste(profile, collapse = ' ')
+    return(profile)
+}
+
+
 MakePublicationDocument <-
-    function(usr = c('Douglas Kelley' = 'AJKyfI4AAAAJ'), addUserInfo = TRUE,
+    function(usr = c('Douglas Kelley' = 'AJKyfI4AAAAJ'), UserProfileFormat = 'lines',
              header = '', cnameExtra = '',
              cnameFormat = c('<h3>', '</h3>'), pubSep = '<hr>',
              titleFormat = c('<h2>', '</h2>'), citeFormat  = c('', ''),
              yearFormat  = c('', ''), textFormat  = c('', ''), footer = '',
-             outputFile  = "outfile.txt", pubid = NULL) {
+             outputFile  = "outfile.txt", pubid = NULL, ...) {
 
     library('scholar')
 
-    if (addUserInfo) {
-        profile = get_profile('AJKyfI4AAAAJ')
-        profile = c('\n',
-                    '|Total Citations:|', profile$total_cites,'|\n',
-                    '|---|---|\n',
-                    '|H index:|', profile$h_index, '|\n',
-                    '|i10 index:|', profile$i10_index, '|\n\n')
-        profile = paste(profile, collapse = ' ')
-
-    }  else profile = ''
+    profile = ''; profileHead = ''
+    if (!is.null(UserProfileFormat)) {
+        profile = MakeUserProfile(usr, UserProfileFormat)
+        if (UserProfileFormat != 'table') {
+            profileHead = profile
+            profile = ''
+        }
+    }
 
     pubs  = get_publications(usr)
     if (!is.null(pubid)) {
@@ -30,8 +51,8 @@ MakePublicationDocument <-
 
     out = '\n|'
 
-    addColName <- function(txt)
-        paste(out, cnameExtra, cnameFormat[1], txt, cnameFormat[2], '|')
+    addColName <- function(txt, format = cnameFormat)
+        paste(out, cnameExtra, format[1], txt, format[2], '|')
 
     addCell <- function(format, txt, outi = out)
         paste(outi, format[1], txt, format[2], '|')
@@ -49,7 +70,7 @@ MakePublicationDocument <-
         out = paste(out,'\n|')
     }
 
-    out = addColName('')
+    out = addColName(profileHead, c('',''))
     out = addColName('Cite By')
     out = addColName('Year')
     out = paste(out, '\n|---|---|---|')
@@ -92,47 +113,6 @@ MakePublicationDocument <-
 
     cat(out, file=outputFile,sep="\n")
 
+    return(outputFile)
+
 }
-
-
-
-# Example
-class = "publication"
-header = 'Title: Publications
-Date: 2015-10-01 16:31
-Category: Research
-status: published
-
-<hr class="title">
-    <h1 align="center"> Publication List </h1>
-<hr class="title">
-'
-
-cnameExtra  = '<hr> &nbsp;'
-cnameFormat = c('&nbsp; <h3 class = "publication">', '</h3> &nbsp;')
-pubSep      = '<hr>'
-titleFormat = c('<h3 class = "publication">', '</h3>')
-citeFormat  = c('&nbsp;', '')
-yearFormat  = c('&nbsp;', '')
-textFormat  = c('', '')
-
-footer = ''
-
-outputFile = 'yay.md'
-
-MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), TRUE,
-                        header, cnameExtra, cnameFormat,
-                        pubSep, titleFormat, citeFormat, yearFormat, textFormat,
-                        footer, outputFile)
-outputFile = 'yay1.md'
-
-MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), TRUE,
-                        header, cnameExtra, cnameFormat,
-                        pubSep, titleFormat, citeFormat, yearFormat, textFormat,
-                        footer, outputFile, 'qjMakFHDy7sC')
-outputFile = 'yay2.md'
-
-MakePublicationDocument(c('Douglas Kelley' = 'AJKyfI4AAAAJ'), TRUE,
-                        header, cnameExtra, cnameFormat,
-                        pubSep, titleFormat, citeFormat, yearFormat, textFormat,
-                        footer, outputFile, c('qjMakFHDy7sC', 'UeHWp8X0CEIC'))
