@@ -1,25 +1,3 @@
-MakeUserProfile <- function(usr, format = '1line') {
-    profile = get_profile(usr)
-
-    if (format == 'table') {
-        profile = c('\n',
-                    '|**Total Citations:**|', profile$total_cites,'|\n',
-                    '|---|---|\n',
-                    '|**H index:**|', profile$h_index, '|\n',
-                    '|**i10 index:**|', profile$i10_index, '|\n\n')
-    } else if(format == 'lines') {
-        profile = c('**Total Citations:**', profile$total_cites,'<br>',
-                    '**H index:**', profile$h_index, '<br>',
-                    '**i10 index:**', profile$i10_index)
-    }  else {
-        profile = c('**Total Citations:**', profile$total_cites,';',
-                    '**H index:**', profile$h_index, ';',
-                    '**i10 index:**', profile$i10_index)
-    }
-    profile = paste(profile, collapse = ' ')
-    return(profile)
-}
-
 
 MakePublicationDocument <-
     function(usr = c('Douglas Kelley' = 'AJKyfI4AAAAJ'), UserProfileFormat = 'lines',
@@ -30,6 +8,7 @@ MakePublicationDocument <-
              outputFile  = "outfile.txt", pubid = NULL, ...) {
 
     library('scholar')
+    library('gitBasedProjects')
 
     profile = ''; profileHead = ''
     if (!is.null(UserProfileFormat)) {
@@ -93,9 +72,11 @@ MakePublicationDocument <-
     out = addNewLine()
 
     cite = citation('scholar')
-    cite = c('Generated using scholar package:\n',
+    cite = c('Generated using scholar packages:\n',
                cite$author$family, ',', cite$author$given, '(', cite$year, '),',
-               cite$title, ',', cite$note, ',', cite$url)
+               cite$title, ',', cite$note, ',', cite$url,'\n and \n',
+               'googleScholarGrab version', gitVersionNumber(), 'from',
+               gitRemoteURL())
 
     if (!is.null(names(usr))) {
         name = c('<a href="https://scholar.google.co.uk/citations?user=',
