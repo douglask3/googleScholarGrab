@@ -81,13 +81,13 @@ MakePublicationDocument <-
     if (!is.null(names(usr))) {
         name = c('<a href="https://scholar.google.co.uk/citations?user=',
                             usr, '&hl">',
-                 names(usr), '</a> on')
+                 names(usr), "'s</a>")
     } else name = ''
 
     sch = c('extracted from', name,
-            '<a href="https://scholar.google.co.uk/">google scholar</a>')
-
-
+            '<a href="https://scholar.google.co.uk/">google scholar</a>',
+            'on', format(Sys.time(), "%a %d %b %Y %X"))
+            
     cite = paste(cite, collapse = ' ')
     sch  = paste(sch, collapse = ' ')
     out = paste(c(header, profile, out, cite, sch, footer), collapse ='\n')
