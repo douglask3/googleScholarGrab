@@ -1,4 +1,5 @@
 MakeUserProfile <- function(usr, format = '1line') {
+    library('scholar')
     profile = get_profile(usr)
 
     if (format == 'table') {
