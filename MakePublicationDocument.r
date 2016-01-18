@@ -87,13 +87,14 @@ MakePublicationDocument <-
     sch = c('extracted from', name,
             '<a href="https://scholar.google.co.uk/">google scholar</a>',
             'on', format(Sys.time(), "%a %d %b %Y %X"))
-            
+
     cite = paste(cite, collapse = ' ')
     sch  = paste(sch, collapse = ' ')
     out = paste(c(header, profile, out, cite, sch, footer), collapse ='\n')
 
-    cat(out, file=outputFile,sep="\n")
+    if (is.null(outputFile)) return(out)
 
+    cat(out, file = outputFile, sep = "\n")
     return(outputFile)
 
 }
