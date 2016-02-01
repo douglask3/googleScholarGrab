@@ -1,7 +1,7 @@
 
 MakePublicationDocument.Rlist <-
     function(usr = c('Douglas Kelley' = 'AJKyfI4AAAAJ'), UserProfileFormat = 'lines',
-             pubid = NULL, includeCites = TRUE, ...) {
+             pubid = NULL, includeCites = TRUE, dateOrdered = TRUE, ...) {
 
     library('scholar')
     library('gitBasedProjects')
@@ -12,6 +12,8 @@ MakePublicationDocument.Rlist <-
         if (!any(pubid)) warning('no publications found')
         pubs = pubs[pubid,]
     }
+    
+    if (dateOrdered) pubs = pubs[sort(pubs[,'year'], TRUE, index.return = TRUE)[[2]],]
 
     npubs = nrow(pubs)
 
@@ -20,7 +22,6 @@ MakePublicationDocument.Rlist <-
 
     pubs = apply(pubs,1, makePub)
     pubs = split(as.matrix(pubs), rep(1:ncol(pubs), each = nrow(pubs)))
-
 
 
     cite = citation('scholar')
