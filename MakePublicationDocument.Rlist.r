@@ -26,9 +26,9 @@ MakePublicationDocument.Rlist <-
 
     cite = citation('scholar')
 
-    cite = paste('Generated using scholar ', cite$note, ' by ', cite$author,
-                 ', ', cite$year, ' (<a href ="', cite$url, '">); and googleScholarGrab version', gitVersionNumber(),
-                 ' (<a href = "',gitRemoteURL(),'")', sep = "")
+    cite = paste('Generated using R-package scholar ', cite$note, ' by ', cite$author,
+                 ', ', cite$year, ' (<a href ="', cite$url, '">',cite$url, '</a>); and googleScholarGrab version', gitVersionNumber(),
+                 ' (<a href = "',gitRemoteURL(),'">', gitRemoteURL()',</a>)', sep = "")
 
     if (!is.null(names(usr))) {
         name = paste('<a href="https://scholar.google.co.uk/citations?user=',
